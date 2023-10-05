@@ -1,4 +1,4 @@
-# MastGeneralStoreRoadTrip
+# Mast General Store Road Trip
 
 ### "The Tastiest Road Trip in Western NC" (A road trip that reaches every Mast General Store in North Carolina)
 

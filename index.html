@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<title>Mast General Store Road Trip</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background: "white";
+			font-family: "Montserrat", sans-serif;
+            font-size:small;
+			color: #3d3d3d;
+		}
+
+        html {
+            background-color: #FCF8F4;
+        }
+
+		h1 {
+			position: absolute;
+			margin-top: 0;
+			top: 10px;
+			left: 10px;
+            width: 250px;
+			font-size: 2em;
+			font-family: "Lora";
+            font-weight:900;
+            color: #b62f3f;
+			letter-spacing: .04em;
+			padding: 10px 15px;
+			background: rgba(256, 256, 220);
+			border: 1px solid grey;
+			border-radius: 1px;
+			z-index: 800;
+		}
+
+		h2 {
+			font-family: "Lora", serif;
+			letter-spacing: .04em;
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+            left:300px;
+			width: 80%;
+		}
+
+		section {
+			position: absolute;
+			bottom: 0;
+            left: 10px;
+			width: 250px;
+			margin: 20px auto;
+			padding: 0 15px;
+			background:rgba(256, 256, 220);
+            border: 1px solid grey;
+			border-radius: 1px;
+			z-index: 800;
+		}
+
+		p {
+			font-size:.75em;
+			line-height: 1.5em;
+		}
+
+		a {
+			color: #005daa;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+      p.author {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 0.6em;
+        line-height: 1.5em;
+        color:#3d3d3d;
+        font-style: italic;
+        text-align: left;
+      }
+
+      a:hover {
+        color: #005daa;
+        text-decoration: underline;
+      }
+	</style>
+</head>
+
+<body>
+
+	<h1>The Tastiest 
+        Road Trip in 
+        Western NC</h1>
+
+	<div id='map'></div>
+
+	<section>
+	    <p>The Mast General Store has a <a href="https://www.mastgeneralstore.com/the-mast-story">rich history</a> and an even richer selection of food, snacks, and curated gear that would be all any traveler needs.</p>
+        <img src="images/mast-general-store-logo-6DD69E5392-seeklogo.com.png", 
+            width="240px"
+            height="100px"/>
+        <img src="images/Mast_General_Store-27527.jpg"
+            width="240px"
+            height="150px"/>
+        <p>This map offers an alternate route to reach the NC/TN border. You can expect to make a stop at all of the North Carolina locations of the Mast General Store including the original location in Valle Crucis, NC. Not only will you have the best road snacks to eat on your trip, you'll also be able to explore the towns of Boone, Valle Crucis, Asheville, Hendersonville, and Waynesville, North Carolina.</p>
+        <p>Click on the markers to get the full address of each store location.</p>
+		<p>Hungry yet? Check out the <a href="https://www.mastgeneralstore.com/candy#/filter:category:Candy$253EOld$2520Fashioned$2520Favorites">candy selection!</a></p>
+        <p.author>Map authored by: Miranda Darwin</p.author>
+	</section>
+
+
+	<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+	<script src="data/route.js"></script>
+
+
+	<script>
+
+//options to be used when creating the map
+		
+var options = {
+    center: [35.898756, -82.463609],
+    zoom: 20
+}
+
+
+
+//creation of the Leaflet map
+		var map = L.map('map');
+
+//request to load basemap
+var CartoDB_Voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 16
+}).addTo(map);
+
+//string content to be inserted into a tooltip
+		//var message = 'Beacon Heights!';
+
+//create a Leaflet marker, centered on the map's center.
+		//L.marker(map.getCenter())
+			//.bindTooltip(message) //bind the tooltip and message to the marker
+			//.addTo(map) // add the marker to the map`
+			//.openTooltip(); // open the tooltip
+
+    var options = {
+        center: [35.898756, -82.463609],
+        zoom: 20
+    }
+
+	var myRoute = L.geoJson(data, {
+		filter: function(feature) {
+			if(feature.geometry.type == "LineString") {
+				return feature; 
+			}
+		}, 
+		style: function(feature) {
+			return {color: "#2c6655",
+			weight: 5,
+			opacity: 0.75,
+            dashArray: "2, 10"
+			}
+		}
+	}).addTo(map);
+
+	map.fitBounds(myRoute.getBounds());
+
+var myStops = L.geoJson(data, {
+	filter: function(feature) {
+		if(feature.geometry.type == "Point") {
+			return feature;
+		}
+	}, 
+	onEachFeature: function(feature, layer) {
+		console.log(feature.properties)
+		layer.bindTooltip(feature.properties['name'])
+        layer.bindPopup(feature.properties['desc'])
+		},
+	}).addTo(map);
+
+	</script>
+
+</body>
+
+</html>
